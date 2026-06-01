@@ -1,39 +1,19 @@
 import pandas as pd
 
-# Load raw dataset
-df = pd.read_csv("../data/employee_records.csv")
+# ✅ Direct absolute path (safe for Windows)
+file_in = "C:/Users/LENOVO/Desktop/Projects/AI_Credential_Dashboard/data/employee_records.csv"
+file_out ="C:/Users/LENOVO/Desktop/Projects/AI_Credential_Dashboard/data/clean_employee_records.csv"
 
-# -----------------------------
-# Fix Age
-# -----------------------------
-df['Age'] = df['Age'].replace("twenty four", 24)   # replace text with number
-df['Age'] = pd.to_numeric(df['Age'], errors='coerce')  # convert to numeric, invalid → NaN
-df['Age'].fillna(df['Age'].median(), inplace=True)     # fill missing with median
+# ✅ Read raw dataset
+df = pd.read_csv(file_in)
 
-# -----------------------------
-# Fix Department
-# -----------------------------
-df['Department'].fillna("Unknown", inplace=True)   # replace NaN with "Unknown"
+# ✅ Convert JoiningDate to datetime with dayfirst
+df["JoiningDate"] = pd.to_datetime(df["JoiningDate"], errors="coerce", dayfirst=True)
 
-# -----------------------------
-# Fix Salary
-# -----------------------------
-df['Salary'] = pd.to_numeric(df['Salary'], errors='coerce')  # convert to numeric
-df['Salary'].fillna(df['Salary'].mean(), inplace=True)       # fill missing with mean
+# ✅ Standardize format to ISO (YYYY-MM-DD)
+df["JoiningDate"] = df["JoiningDate"].dt.strftime("%Y-%m-%d")
 
-# -----------------------------
-# Fix JoiningDate
-# -----------------------------
-df['JoiningDate'] = pd.to_datetime(df['JoiningDate'], errors='coerce')  # convert to datetime
-df['JoiningDate'] = df['JoiningDate'].dt.strftime("%Y-%m-%d")           # standardize format
+# ✅ Save cleaned dataset
+df.to_csv(file_out, index=False)
 
-# -----------------------------
-# Remove duplicates
-# -----------------------------
-df = df.drop_duplicates()
-
-# -----------------------------
-# Save cleaned dataset
-# -----------------------------
-df.to_csv("../data/clean_employee_records.csv", index=False)
-print("✅ Clean dataset saved at data/clean_employee_records.csv")
+print("Cleaned dataset saved to:", file_out)
