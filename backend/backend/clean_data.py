@@ -1,8 +1,10 @@
 import pandas as pd
 
 # ✅ Direct absolute path (safe for Windows)
-file_in = "C:/Users/LENOVO/Desktop/Projects/AI_Credential_Dashboard/data/employee_records.csv"
-file_out = "C:/Users/LENOVO/Desktop/Projects/AI_Credential_Dashboard/data/clean_employee_records.csv"
+
+file_in = "data/employee_records.csv"
+file_out = "data/clean_employee_records.csv"
+
 
 # ✅ Read raw dataset
 df = pd.read_csv(file_in)
