@@ -32,3 +32,6 @@ filtered_data = data[
     (data["Role"] == selected_role)
 ]
 st.write(filtered_data)
+
+
+## Frontend app file
