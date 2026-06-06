@@ -22,26 +22,33 @@ df["Role"] = df["Role"].astype(str).str.strip().str.title()
 df["Department"] = df["Department"].astype(str).str.strip().str.title()
 
 # ---------------------------
-# Step 3: Convert word salary to number
-def convert_salary_to_number(salary_str):
+# Step 3: Convert Age (words → number)
+def convert_age_to_number(age_str):
     try:
-        return w2n.word_to_num(str(salary_str))
+        return w2n.word_to_num(str(age_str))
     except:
-        return None
+        try:
+            return int(age_str)
+        except:
+            return None
 
-df["Salary"] = df["Salary"].apply(convert_salary_to_number)
+df["Age"] = df["Age"].apply(convert_age_to_number)
 
 # ---------------------------
-# Step 4: Convert JoiningDate to datetime
+# Step 4: Ensure Salary is numeric
+df["Salary"] = pd.to_numeric(df["Salary"], errors="coerce")
+
+# ---------------------------
+# Step 5: Convert JoiningDate to datetime
 df["JoiningDate"] = pd.to_datetime(df["JoiningDate"], errors="coerce")
 
 # ---------------------------
-# Step 5: Derived feature - ExperienceYears
+# Step 6: Derived feature - ExperienceYears
 current_date = datetime.now()
 df["ExperienceYears"] = (current_date - df["JoiningDate"]).dt.days // 365
 
 # ---------------------------
-# Step 6: Derived feature - SalaryBand
+# Step 7: Derived feature - SalaryBand
 def categorize_salary(salary):
     if pd.isnull(salary):
         return None
@@ -55,12 +62,12 @@ def categorize_salary(salary):
 df["SalaryBand"] = df["Salary"].apply(categorize_salary)
 
 # ---------------------------
-# Step 7: Encode categorical columns
+# Step 8: Encode categorical columns
 label_encoder = LabelEncoder()
 df["DepartmentEncoded"] = label_encoder.fit_transform(df["Department"].astype(str))
 
 # ---------------------------
-# Step 8: Normalize numeric values
+# Step 9: Normalize numeric values
 scaler = MinMaxScaler()
 df[["SalaryNorm", "ExperienceNorm"]] = scaler.fit_transform(
     df[["Salary", "ExperienceYears"]].fillna(0)
