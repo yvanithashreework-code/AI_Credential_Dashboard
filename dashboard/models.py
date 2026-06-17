@@ -8,10 +8,12 @@ class User(models.Model):
     def __str__(self):
         return self.username
 
+
 class Employee(models.Model):
-    name = models.CharField(max_length=150)
-    email = models.EmailField(unique=True)
+    name = models.CharField(max_length=100)
+    position = models.CharField(max_length=100, default="Staff")
     department = models.CharField(max_length=100)
+    status = models.CharField(max_length=50, default="Active")
 
     def __str__(self):
         return self.name
